@@ -1,19 +1,19 @@
 import mongoose from "mongoose";
 
-const connectToDatabase = async (): Promise<void> => {
-  if (mongoose.connection.readyState === 1) {
-    return; // 已经连接
+let isConnected = false;
+
+const connectToDatabase = async () => {
+  if (isConnected) {
+    return;
   }
 
   try {
-    await mongoose.connect(process.env.DATABASE_URL || "", {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(process.env.DATABASE_URL || "");
+    isConnected = true;
     console.log("MongoDB 连接成功");
   } catch (error) {
     console.error("MongoDB 连接失败:", error);
-    throw new Error("MongoDB 连接失败");
+    throw error;
   }
 };
 
