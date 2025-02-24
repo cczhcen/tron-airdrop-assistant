@@ -7,7 +7,8 @@ export async function GET() {
   try {
     const airdrops = await Airdrop.find().sort({ createdAt: -1 });
     return NextResponse.json(airdrops);
-  } catch (error) {
+  } catch (error: unknown) {
+    console.error("获取空投记录失败:", error);
     return NextResponse.json({ error: "获取空投记录失败" }, { status: 500 });
   }
 }
@@ -18,7 +19,8 @@ export async function POST(request: Request) {
     const data = await request.json();
     const airdrop = await Airdrop.create(data);
     return NextResponse.json(airdrop);
-  } catch (error) {
+  } catch (error: unknown) {
+    console.error("创建空投记录失败:", error);
     return NextResponse.json({ error: "创建空投记录失败" }, { status: 500 });
   }
 }

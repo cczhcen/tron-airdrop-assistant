@@ -4,7 +4,7 @@ interface TronContractMethod {
 }
 
 interface TronContract {
-  at: (address: string) => Promise<TronContract>;
+  at(address: string): Promise<TronContract>;
   methods: Record<string, (...args: unknown[]) => TronContractMethod>;
   name(): { call(): Promise<string> };
   symbol(): { call(): Promise<string> };
@@ -45,8 +45,8 @@ interface TronWeb {
   defaultAddress: {
     base58: string;
   };
-  contract: {
-    at: (address: string) => Promise<TronContract>;
+  contract(): {
+    at(address: string): Promise<TronContract>;
   };
   trx: {
     getUnconfirmedTransactionInfo(txHash: string): Promise<{

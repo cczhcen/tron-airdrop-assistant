@@ -118,12 +118,13 @@ export default function Airdrop() {
         setTimeout(async () => {
           const result = await tronWeb.trx.getUnconfirmedTransactionInfo(tx);
           try {
-            if (result.receipt.result === "SUCCESS") {
+            if (result?.receipt?.result === "SUCCESS") {
               toast.success("代币授权成功", { id: toastId });
             } else {
               toast.error("代币授权失败", { id: toastId });
             }
-          } catch (error) {
+          } catch (err) {
+            console.error("检查交易状态失败:", err);
             toast.error("代币授权失败", { id: toastId });
           }
         }, 3000);
@@ -163,9 +164,9 @@ export default function Airdrop() {
       setTimeout(() => {
         router.push("/airdrops");
       }, 3000);
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : "未知错误";
-      toast.error(`空投执行失败：${errorMessage}`);
+    } catch (err) {
+      console.error("合约操作失败:", err);
+      toast.error("操作失败");
     }
   };
 
