@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import { AirdropList } from "./components/airdrop-list";
@@ -12,33 +12,36 @@ export default function Airdrops() {
   const router = useRouter();
   const { tronWeb } = useTronWeb();
 
-  const checkPendingTransactions = async (pendingAirdrops: Airdrop[]) => {
-    if (!tronWeb) return;
+  const checkPendingTransactions = useCallback(
+    async (pendingAirdrops: Airdrop[]) => {
+      if (!tronWeb) return;
 
-    for (const airdrop of pendingAirdrops) {
-      try {
-        const result = await tronWeb.trx.getUnconfirmedTransactionInfo(
-          airdrop.txHash
-        );
-        if (result && result.receipt) {
-          const newStatus =
-            result.receipt.result === "SUCCESS" ? "success" : "failed";
-
-          // 更新数据库
-          await api.updateAirdropStatus(airdrop._id, newStatus);
-
-          // 更新本地状态
-          setAirdrops((prev) =>
-            prev.map((item) =>
-              item._id === airdrop._id ? { ...item, status: newStatus } : item
-            )
+      for (const airdrop of pendingAirdrops) {
+        try {
+          const result = await tronWeb.trx.getUnconfirmedTransactionInfo(
+            airdrop.txHash
           );
+          if (result && result.receipt) {
+            const newStatus =
+              result.receipt.result === "SUCCESS" ? "success" : "failed";
+
+            // 更新数据库
+            await api.updateAirdropStatus(airdrop._id, newStatus);
+
+            // 更新本地状态
+            setAirdrops((prev) =>
+              prev.map((item) =>
+                item._id === airdrop._id ? { ...item, status: newStatus } : item
+              )
+            );
+          }
+        } catch (error) {
+          console.error("检查交易状态失败:", error);
         }
-      } catch (error) {
-        console.error("检查交易状态失败:", error);
       }
-    }
-  };
+    },
+    [tronWeb]
+  );
 
   useEffect(() => {
     const fetchAirdrops = async () => {
@@ -51,7 +54,7 @@ export default function Airdrops() {
           (airdrop: Airdrop) => airdrop.status === "pending"
         );
         if (pendingAirdrops.length > 0) {
-          checkPendingTransactions(pendingAirdrops);
+          await checkPendingTransactions(pendingAirdrops);
         }
       } catch (error) {
         console.error("获取空投记录失败:", error);
@@ -59,7 +62,7 @@ export default function Airdrops() {
       }
     };
     fetchAirdrops();
-  }, [tronWeb]);
+  }, [checkPendingTransactions]);
 
   const handleViewDetails = (id: string) => {
     router.push(`/airdrops/${id}`);

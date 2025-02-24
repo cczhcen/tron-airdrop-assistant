@@ -11,8 +11,6 @@ import { api } from "@/lib/api";
 import { AddressGroup } from "@/types";
 
 export default function Airdrop() {
-  const [selectedGroups, setSelectedGroups] = useState<number[]>([]);
-  const [amount, setAmount] = useState("");
   const [sameAmountValue, setSameAmountValue] = useState(0);
   const [randomMin, setRandomMin] = useState(0);
   const [randomMax, setRandomMax] = useState(0);
@@ -23,7 +21,7 @@ export default function Airdrop() {
     balance: number;
     decimals: number;
   } | null>(null);
-  const { tronWeb, address, connectWallet } = useTronWeb();
+  const { tronWeb, address } = useTronWeb();
   const [addresses, setAddresses] = useState<
     { address: string; amount: string }[]
   >([]);
@@ -165,8 +163,9 @@ export default function Airdrop() {
       setTimeout(() => {
         router.push("/airdrops");
       }, 3000);
-    } catch (error: any) {
-      toast.error("空投执行失败：" + (error.message || "未知错误"));
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "未知错误";
+      toast.error(`空投执行失败：${errorMessage}`);
     }
   };
 
@@ -198,6 +197,7 @@ export default function Airdrop() {
       });
       toast.success("代币信息加载成功！");
     } catch (error) {
+      console.error("加载代币信息失败:", error);
       toast.error("代币信息加载失败，请检查代币合约地址是否正确");
     }
   };
@@ -226,14 +226,6 @@ export default function Airdrop() {
       // 如果删除后地址列表为空，不需要添加空行
       return newAddresses;
     });
-  };
-
-  const handleDeleteGroup = (groupId: number) => {
-    // 实现删除组的功能
-  };
-
-  const handleEditGroup = (groupId: number, newName: string) => {
-    // 实现编辑组的功能
   };
 
   const handleImportGroup = (
