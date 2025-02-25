@@ -1,20 +1,28 @@
+// Author: segon
+// GitHub: https://github.com/segonse/segonse
+// This file is for tron airdrop
+
 "use client";
 
 import { useState, useEffect } from "react";
 import type { TronWeb } from "@/types/tronweb";
+import toast from "react-hot-toast";
 
 export function useTronWeb() {
   const [tronWeb, setTronWeb] = useState<TronWeb | null>(null);
-  const [address, setAddress] = useState("");
+  const [address, setAddress] = useState<string | null>(null);
 
   const connectWallet = async () => {
     if (typeof window.tronLink === "undefined") {
-      console.error("TronLink 钱包未安装，请安装后重试。");
+      toast.error("请安装 TronLink 钱包扩展");
       return;
     }
 
     try {
-      await window.tronLink.request({ method: "tron_requestAccounts" });
+      await window.tronLink.request({
+        method: "tron_requestAccounts",
+      });
+
       const tronWeb = window.tronWeb;
 
       // 确保 tronWeb 不是 undefined
@@ -22,10 +30,10 @@ export function useTronWeb() {
         setTronWeb(tronWeb);
         setAddress(tronWeb.defaultAddress.base58);
       } else {
-        console.error("无法获取 tronWeb 对象");
+        toast.error("无法获取 tronWeb 对象");
       }
     } catch (error) {
-      console.error("用户拒绝了连接请求", error);
+      toast.error("用户拒绝了连接请求: " + (error as Error).message);
     }
   };
 

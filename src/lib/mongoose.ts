@@ -1,3 +1,7 @@
+// Author: segon
+// GitHub: https://github.com/segonse/segonse
+// This file is for tron airdrop
+
 import mongoose from "mongoose";
 
 let isConnected = false;

@@ -399,7 +399,7 @@ export default function Airdrop() {
           执行空投
         </Button>
         <div className="mt-8">
-          <h2 className="text-lg font-semibold mb-4">导入地址组</h2>
+          <h2 className="text-lg font-semibold mb-4 text-black">导入地址组</h2>
           <GroupList
             groups={groups}
             selectable={true}

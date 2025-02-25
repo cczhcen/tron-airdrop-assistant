@@ -1,3 +1,7 @@
+// Author: segon
+// GitHub: https://github.com/segonse/segonse
+// This file is for tron airdrop
+
 import { NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongoose";
 import Airdrop from "@/models/Airdrop";

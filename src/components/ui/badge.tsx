@@ -1,3 +1,7 @@
+// Author: segon
+// GitHub: https://github.com/segonse/segonse
+// This file is for tron airdrop
+
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 

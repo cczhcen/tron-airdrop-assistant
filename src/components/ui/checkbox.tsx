@@ -1,3 +1,7 @@
+// Author: segon
+// GitHub: https://github.com/segonse/segonse
+// This file is for tron airdrop
+
 "use client";
 
 import * as React from "react";
