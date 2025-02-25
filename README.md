@@ -1,6 +1,4 @@
-# 项目名称
-
-简要描述项目的功能和目的。
+# Tron Airdrop Assistant
 
 ## 目录
 
@@ -57,7 +55,7 @@
    - 选择 "Connect your application"。
    - 复制连接字符串，格式如下：
      ```
-     mongodb+srv://<username>:<password>@cluster.mongodb.net/<dbname>?retryWrites=true&w=majority
+     mongodb+srv://<username>:<password>@cluster.mongodb.net/<dbname>
      ```
    - 将 `<username>` 和 `<password>` 替换为您的数据库用户名和密码，`<dbname>` 替换为您要使用的数据库名称。
 
