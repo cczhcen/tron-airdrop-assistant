@@ -97,6 +97,13 @@ export function GroupList({
     }
   };
 
+  const handleDeleteGroup = (groupId: string) => {
+    const confirmed = window.confirm("您确定要删除这个地址组吗？");
+    if (confirmed && onDelete) {
+      onDelete(groupId);
+    }
+  };
+
   return (
     <div className="space-y-4">
       {selectable && (
@@ -186,7 +193,7 @@ export function GroupList({
                       <Button
                         variant="destructive"
                         size="sm"
-                        onClick={() => onDelete(group._id)}
+                        onClick={() => handleDeleteGroup(group._id)}
                       >
                         删除
                       </Button>
