@@ -29,7 +29,7 @@ export default function Airdrop() {
   const router = useRouter();
   const [groups, setGroups] = useState<AddressGroup[]>([]);
 
-  const AIRDROP_ADDRESS = process.env.NEXT_PUBLIC_AIRDROP_ADDRESS; // 固定的合约地址
+  const AIRDROP_ADDRESS = process.env.NEXT_PUBLIC_AIRDROP_ADDRESS || ""; // 固定的合约地址
 
   // 获取地址组列表
   useEffect(() => {
