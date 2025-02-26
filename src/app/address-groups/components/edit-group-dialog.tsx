@@ -95,8 +95,8 @@ export function EditGroupDialog({
         json.forEach((item: ExcelData) => {
           const address: Address = {
             group_id: group?._id || "",
-            address: item.address || "",
-            description: item.description || "",
+            address: item.address.trim() || "",
+            description: item.description?.trim() || "",
           };
           setAddresses((prev) => [...prev, address]);
         });
