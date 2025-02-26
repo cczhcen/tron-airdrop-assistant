@@ -14,6 +14,13 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import type { AddressGroup, Address } from "@/types";
+import * as XLSX from "xlsx";
+
+// 定义接口以描述 Excel 文件中的数据结构
+interface ExcelData {
+  address: string;
+  description?: string;
+}
 
 interface EditGroupDialogProps {
   group: AddressGroup | null;
@@ -68,11 +75,53 @@ export function EditGroupDialog({
     setAddresses(addresses.filter((addr) => addr._id !== id));
   };
 
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const data = new Uint8Array(e.target?.result as ArrayBuffer);
+      const workbook = XLSX.read(data, { type: "array" });
+
+      if (
+        file.type ===
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      ) {
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const json: ExcelData[] = XLSX.utils.sheet_to_json(worksheet);
+        console.log("json", json);
+        json.forEach((item: ExcelData) => {
+          const address: Address = {
+            group_id: group?._id || "",
+            address: item.address || "",
+            description: item.description || "",
+          };
+          setAddresses((prev) => [...prev, address]);
+        });
+      } else if (file.type === "text/plain") {
+        const text = new TextDecoder().decode(data);
+        const lines = text.split("\n");
+        lines.forEach((line) => {
+          const [address, description] = line.split(",");
+          const addr: Address = {
+            group_id: group?._id || "",
+            address: address.trim(),
+            description: description?.trim() || "",
+          };
+          setAddresses((prev) => [...prev, addr]);
+        });
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-[600px] bg-white">
         <DialogHeader>
-          <DialogTitle className="text-white-800">管理分组</DialogTitle>
+          <DialogTitle className="text-black">管理分组</DialogTitle>
         </DialogHeader>
         <Tabs defaultValue="info" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
@@ -108,6 +157,13 @@ export function EditGroupDialog({
                   />
                 </div>
                 <Button onClick={handleAddAddress}>添加</Button>
+              </div>
+              <div>
+                <input
+                  type="file"
+                  accept=".txt, .xlsx"
+                  onChange={handleFileUpload}
+                />
               </div>
             </div>
             <ScrollArea className="h-[200px] rounded-md border p-2">

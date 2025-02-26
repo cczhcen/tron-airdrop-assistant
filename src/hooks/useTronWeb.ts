@@ -14,19 +14,27 @@ export function useTronWeb() {
 
   const connectWallet = async () => {
     if (typeof window.tronLink === "undefined") {
+      console.log("请安装 TronLink 钱包扩展");
       toast.error("请安装 TronLink 钱包扩展");
       return;
     }
 
     try {
-      await window.tronLink.request({
+      const tronWeb = window.tronWeb;
+
+      const res = await tronWeb.request({
         method: "tron_requestAccounts",
       });
 
-      const tronWeb = window.tronWeb;
+      if (!res) {
+        toast.error("请先解锁 TronLink 钱包");
+        return;
+      } else if (res.code === 4001) {
+        toast.error("用户拒绝了连接请求");
+        return;
+      }
 
-      // 确保 tronWeb 不是 undefined
-      if (tronWeb) {
+      if (tronWeb && res.code === 200) {
         setTronWeb(tronWeb);
         setAddress(tronWeb.defaultAddress.base58);
       } else {
@@ -39,7 +47,7 @@ export function useTronWeb() {
 
   useEffect(() => {
     const initTronWeb = async () => {
-      if (window.tronWeb) {
+      if (window.tronWeb && window.tronWeb.defaultAddress) {
         setTronWeb(window.tronWeb);
         setAddress(window.tronWeb.defaultAddress.base58);
       }

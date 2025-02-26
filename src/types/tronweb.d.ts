@@ -37,6 +37,9 @@ interface TronLinkWallet {
 }
 
 interface TronWeb {
+  request: (options: {
+    method: string;
+  }) => Promise<{ code: number; message?: string }>;
   toBigNumber(value: number | string): {
     multipliedBy(value: number): {
       toFixed(decimals: number): string;
