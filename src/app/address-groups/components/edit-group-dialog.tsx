@@ -91,12 +91,12 @@ export function EditGroupDialog({
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
         const json: ExcelData[] = XLSX.utils.sheet_to_json(worksheet);
-        console.log("json", json);
+        // console.log("json", json);
         json.forEach((item: ExcelData) => {
           const address: Address = {
             group_id: group?._id || "",
-            address: item.address.trim() || "",
-            description: item.description?.trim() || "",
+            address: item.address || "",
+            description: item.description || "",
           };
           setAddresses((prev) => [...prev, address]);
         });
