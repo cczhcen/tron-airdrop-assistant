@@ -168,13 +168,15 @@ export function EditGroupDialog({
             </div>
             <ScrollArea className="h-[200px] rounded-md border p-2">
               <div className="space-y-2">
-                {addresses.map((addr) => (
+                {addresses.map((addr, index) => (
                   <div
                     key={addr._id}
                     className="flex items-center justify-between rounded-lg bg-muted p-2 text-black"
                   >
                     <div className="flex-1 truncate">
-                      <div className="font-medium">{addr.address}</div>
+                      <div className="font-medium">
+                        {index + 1}. {addr.address}
+                      </div>
                       {addr.description && (
                         <div className="text-sm text-muted-foreground">
                           {addr.description}

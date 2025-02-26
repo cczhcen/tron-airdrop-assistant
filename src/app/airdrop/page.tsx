@@ -309,7 +309,11 @@ export default function Airdrop() {
         )}
         <div>
           {addresses.map((addr, index) => (
-            <div key={index} className="flex justify-between gap-1 py-0.5">
+            <div
+              key={index}
+              className="flex justify-between gap-1 py-0.5 items-center"
+            >
+              <span className="text-black">{index + 1}.</span>
               <Input
                 value={addr.address}
                 onChange={(e) => {
