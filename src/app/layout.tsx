@@ -1,6 +1,7 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
 import Navbar from "@/components/layout/navbar";
+import PasswordProtect from "@/components/PasswordProtect";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,7 +19,9 @@ export default function RootLayout({
     <html lang="zh">
       <body className={inter.className}>
         <Navbar />
-        <main className="min-h-screen bg-gray-50 pt-16">{children}</main>
+        <PasswordProtect>
+          <main className="min-h-screen bg-gray-50 pt-16">{children}</main>
+        </PasswordProtect>
       </body>
     </html>
   );

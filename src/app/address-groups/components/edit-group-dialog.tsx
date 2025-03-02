@@ -19,7 +19,7 @@ import * as XLSX from "xlsx";
 // 定义接口以描述 Excel 文件中的数据结构
 interface ExcelData {
   address: string;
-  description?: string;
+  amount?: string;
 }
 
 interface EditGroupDialogProps {
@@ -38,7 +38,7 @@ export function EditGroupDialog({
   const [name, setName] = useState(group?.name || "");
   const [addresses, setAddresses] = useState<Address[]>(group?.addresses || []);
   const [newAddress, setNewAddress] = useState("");
-  const [newDescription, setNewDescription] = useState("");
+  const [newAmount, setNewAmount] = useState("");
 
   useEffect(() => {
     if (group) {
@@ -63,11 +63,11 @@ export function EditGroupDialog({
       const address: Address = {
         group_id: group?._id || "",
         address: newAddress.trim(),
-        description: newDescription.trim(),
+        description: newAmount.trim(),
       };
       setAddresses([...addresses, address]);
       setNewAddress("");
-      setNewDescription("");
+      setNewAmount("");
     }
   };
 
@@ -91,12 +91,11 @@ export function EditGroupDialog({
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
         const json: ExcelData[] = XLSX.utils.sheet_to_json(worksheet);
-        // console.log("json", json);
         json.forEach((item: ExcelData) => {
           const address: Address = {
             group_id: group?._id || "",
             address: item.address || "",
-            description: item.description || "",
+            description: item.amount || "",
           };
           setAddresses((prev) => [...prev, address]);
         });
@@ -104,11 +103,11 @@ export function EditGroupDialog({
         const text = new TextDecoder().decode(data);
         const lines = text.split("\n");
         lines.forEach((line) => {
-          const [address, description] = line.split(",");
+          const [address, amount] = line.split(",");
           const addr: Address = {
             group_id: group?._id || "",
             address: address.trim(),
-            description: description?.trim() || "",
+            description: amount?.trim() || "",
           };
           setAddresses((prev) => [...prev, addr]);
         });
@@ -151,9 +150,10 @@ export function EditGroupDialog({
                 </div>
                 <div className="flex-1">
                   <Input
-                    value={newDescription}
-                    onChange={(e) => setNewDescription(e.target.value)}
-                    placeholder="备注（可选）"
+                    value={newAmount}
+                    onChange={(e) => setNewAmount(e.target.value)}
+                    placeholder="转账金额（可选）"
+                    type="number"
                   />
                 </div>
                 <Button onClick={handleAddAddress}>添加</Button>
@@ -179,7 +179,7 @@ export function EditGroupDialog({
                       </div>
                       {addr.description && (
                         <div className="text-sm text-muted-foreground">
-                          {addr.description}
+                          金额: {addr.description}
                         </div>
                       )}
                     </div>

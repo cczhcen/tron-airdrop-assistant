@@ -270,7 +270,7 @@ export default function Airdrop() {
           ...validAddresses,
           ...newAddresses.map((addr) => ({
             address: addr.address,
-            amount: "", // 初始金额为空
+            amount: addr.description || "", // 将 description 字段的值用作 amount
           })),
         ];
       });
